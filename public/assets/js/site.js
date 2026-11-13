@@ -24,6 +24,8 @@
 			'nav.recs': 'Recommendations', 'nav.donate': 'Donate', 'nav.contact': 'Contact',
 			'menu': 'Menu',
 			'dashboard.open': 'Dashboard and uploads',
+			'tools.open': 'Staff tools', 'tools.title': 'Staff tools', 'tools.publish': 'Publish a video', 'tools.write': 'Write an article',
+			'tools.overlay': 'Edit text & images overlay', 'tools.overlayHint': 'Show or hide the editing panel in the bottom-left corner.', 'tools.on': 'On', 'tools.off': 'Off',
 			'search.open': 'Search posts', 'search.placeholder': 'Search posts…', 'search.submit': 'Search',
 			'theme.toggle': 'Switch light / dark theme',
 			'lang.aria': 'Translate to Spanish',
@@ -113,6 +115,8 @@
 			'nav.recs': 'Recomendaciones', 'nav.donate': 'Donar', 'nav.contact': 'Contacto',
 			'menu': 'Menú',
 			'dashboard.open': 'Panel y publicaciones',
+			'tools.open': 'Herramientas del equipo', 'tools.title': 'Herramientas del equipo', 'tools.publish': 'Publicar un video', 'tools.write': 'Escribir un artículo',
+			'tools.overlay': 'Panel para editar texto e imágenes', 'tools.overlayHint': 'Muestra u oculta el panel de edición de la esquina inferior izquierda.', 'tools.on': 'Sí', 'tools.off': 'No',
 			'search.open': 'Buscar publicaciones', 'search.placeholder': 'Buscar publicaciones…', 'search.submit': 'Buscar',
 			'theme.toggle': 'Cambiar entre tema claro y oscuro',
 			'lang.aria': 'Traducir al inglés',
@@ -579,6 +583,144 @@
 		dashboardLink.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></svg>';
 		headerTools.insertBefore(dashboardLink, headerTools.firstChild);
 	}
+
+	/* ---------- staff tools menu (publisher / editor / admin) ----------
+	   One "Staff tools" button in the header, built only after the server confirms the signed-in role
+	   (same D.me() / D.hasRole() used everywhere else; nothing here grants access, the Worker still checks every call).
+	     - Links mirror the dashboard's role-gated tool list in manage.html (publisher+: publish, write).
+	     - Toggle tools are registered by the page script that owns them: D.registerTool({ id, minRole, labelKey, hintKey, isOn, setOn }).
+	       content.js registers the "Edit text & images" overlay (admin, same as the dashboard's own gate).
+	   Toggle choices are remembered per account in this browser (localStorage), see D.toolPref / D.setToolPref. */
+	var STAFF_LINKS = [
+		{ id: 'publish', minRole: 'publisher', labelKey: 'tools.publish', href: 'publish.html' },
+		{ id: 'write', minRole: 'publisher', labelKey: 'tools.write', href: 'write.html' }
+	];
+	var staffTools = {};
+	var staffAccount = null;
+	var toolsWrap = null, toolsBtn = null, toolsMenu = null;
+
+	function toolKey(id) { return 'dsdk.tool.' + (staffAccount && staffAccount.id != null ? staffAccount.id : 'anon') + '.' + id; }
+	function toolPref(id) { var v = get(toolKey(id)); return v === '1' ? true : v === '0' ? false : null; }
+	function setToolPref(id, on) { set(toolKey(id), on ? '1' : '0'); }
+
+	function closeToolsMenu(returnFocus) {
+		if (!toolsMenu || toolsMenu.hidden) return;
+		toolsMenu.hidden = true;
+		toolsBtn.setAttribute('aria-expanded', 'false');
+		if (returnFocus) toolsBtn.focus();
+	}
+	function buildToolsUi() {
+		if (toolsWrap || !headerTools) return;
+		toolsWrap = document.createElement('div');
+		toolsWrap.className = 'tools-wrap';
+		toolsBtn = document.createElement('button');
+		toolsBtn.type = 'button';
+		toolsBtn.className = 'icon-btn tools-btn';
+		toolsBtn.setAttribute('aria-haspopup', 'true');
+		toolsBtn.setAttribute('aria-expanded', 'false');
+		toolsBtn.setAttribute('aria-controls', 'staff-tools-menu');
+		toolsBtn.setAttribute('data-i18n-aria', 'tools.open');
+		toolsBtn.setAttribute('data-i18n-title', 'tools.open');
+		toolsBtn.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.7 6.3a4 4 0 0 0-5.4 5L3.5 17.1a1.7 1.7 0 0 0 2.4 2.4l5.8-5.8a4 4 0 0 0 5-5.4l-2.5 2.5-2.2-.5-.5-2.2z"/></svg>';
+		toolsMenu = document.createElement('div');
+		toolsMenu.id = 'staff-tools-menu';
+		toolsMenu.className = 'tools-menu';
+		toolsMenu.hidden = true;
+		toolsMenu.setAttribute('role', 'region');
+		toolsMenu.setAttribute('data-i18n-aria', 'tools.title');
+		toolsBtn.addEventListener('click', function () {
+			var open = toolsMenu.hidden;
+			toolsMenu.hidden = !open;
+			toolsBtn.setAttribute('aria-expanded', String(open));
+		});
+		document.addEventListener('click', function (event) { if (toolsWrap && !toolsWrap.contains(event.target)) closeToolsMenu(false); });
+		document.addEventListener('keydown', function (event) { if (event.key === 'Escape') closeToolsMenu(true); });
+		toolsWrap.appendChild(toolsBtn);
+		toolsWrap.appendChild(toolsMenu);
+		headerTools.insertBefore(toolsWrap, headerTools.firstChild);
+	}
+	function removeToolsUi() {
+		if (toolsWrap) { toolsWrap.remove(); toolsWrap = toolsBtn = toolsMenu = null; }
+	}
+
+	function renderTools() {
+		if (!staffAccount || !hasRole(staffAccount, 'publisher')) { removeToolsUi(); return; }
+		var links = STAFF_LINKS.filter(function (item) { return hasRole(staffAccount, item.minRole); });
+		var toggles = Object.keys(staffTools).map(function (id) { return staffTools[id]; }).filter(function (tool) { return hasRole(staffAccount, tool.minRole); });
+		if (!links.length && !toggles.length) { removeToolsUi(); return; }
+		buildToolsUi();
+		if (!toolsMenu) return;
+
+		toolsMenu.replaceChildren();
+		var title = document.createElement('p');
+		title.className = 'tools-menu__title';
+		title.setAttribute('data-i18n', 'tools.title');
+		title.textContent = t('tools.title');
+		toolsMenu.appendChild(title);
+
+		toggles.forEach(function (tool) {
+			var on = Boolean(tool.isOn());
+			var row = document.createElement('button');
+			row.type = 'button';
+			row.className = 'tools-menu__item tools-menu__toggle';
+			row.setAttribute('role', 'switch');
+			row.setAttribute('aria-checked', String(on));
+			var text = document.createElement('span');
+			var name = document.createElement('strong');
+			name.setAttribute('data-i18n', tool.labelKey);
+			name.textContent = t(tool.labelKey);
+			text.appendChild(name);
+			if (tool.hintKey) {
+				var hint = document.createElement('small');
+				hint.setAttribute('data-i18n', tool.hintKey);
+				hint.textContent = t(tool.hintKey);
+				text.appendChild(hint);
+			}
+			var state = document.createElement('span');
+			state.className = 'tools-menu__state';
+			state.setAttribute('data-i18n', on ? 'tools.on' : 'tools.off');
+			state.textContent = t(on ? 'tools.on' : 'tools.off');
+			row.appendChild(text);
+			row.appendChild(state);
+			row.addEventListener('click', function () {
+				var next = !tool.isOn();
+				if (tool.setOn(next) === false) { renderTools(); return; }     /* tool refused (e.g. unsaved edits kept) */
+				setToolPref(tool.id, next);
+				renderTools();
+				var again = toolsMenu && toolsMenu.querySelectorAll('.tools-menu__toggle');
+				var idx = toggles.indexOf(tool);
+				if (again && again[idx]) again[idx].focus();
+			});
+			toolsMenu.appendChild(row);
+		});
+
+		links.forEach(function (item) {
+			var a = document.createElement('a');
+			a.className = 'tools-menu__item';
+			a.href = siteRoot + item.href;
+			var name = document.createElement('strong');
+			name.setAttribute('data-i18n', item.labelKey);
+			name.textContent = t(item.labelKey);
+			a.appendChild(name);
+			toolsMenu.appendChild(a);
+		});
+	}
+
+	function registerTool(def) {
+		if (!def || !def.id || typeof def.isOn !== 'function' || typeof def.setOn !== 'function') return;
+		def.minRole = ROLE_LEVEL[def.minRole] != null ? def.minRole : 'admin';
+		staffTools[def.id] = def;
+		renderTools();
+	}
+	window.DSDK.registerTool = registerTool;
+	window.DSDK.toolPref = toolPref;
+	window.DSDK.setToolPref = setToolPref;
+
+	function syncStaffTools(account) { staffAccount = account || null; renderTools(); }
+	accountListeners.push(syncStaffTools);
+	/* Regular visitors never hit this: the "who am I?" request only runs when this browser has signed in as staff before. */
+	if (window.DSDK.maybeStaff()) me().then(syncStaffTools);
+
 
 	applyLang();
 })();

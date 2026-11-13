@@ -340,9 +340,35 @@
 
 	window.addEventListener('beforeunload', function (event) { if (editing && dirtyCount() && live) { event.preventDefault(); event.returnValue = ''; } });
 
+	/* ---------- show / hide the overlay from the header's "Staff tools" menu (see site.js) ----------
+	   Admin-only, exactly like the bar itself. Hiding leaves editing mode first so no dashed, editable text is left on the page;
+	   if there are unsaved changes the admin is asked first and the overlay stays open when they say no.
+	   The choice is remembered per account in this browser. Opening the page with ?edit=1 (dashboard shortcut) always shows it. */
+	var OVERLAY_MIN_ROLE = 'admin';
+	function overlayVisible() { return Boolean(bar) && !bar.hidden; }
+	function setOverlayVisible(on) {
+		if (!bar) return false;
+		if (!on) {
+			if (editing) {
+				if (dirtyCount() && !window.confirm('You have unsaved changes. Hide the editing panel and keep them on this page only until you reload?')) return false;
+				setEditing(false);
+			}
+			if (dialog && dialog.open) dialog.close();
+		}
+		bar.hidden = !on;
+		return true;
+	}
+
 	D.me().then(function (account) {
-		if (!account || !D.hasRole(account, 'admin')) return;
+		if (!account || !D.hasRole(account, OVERLAY_MIN_ROLE)) return;
 		buildBar();
-		if (/[?&]edit=1/.test(location.search) && (textNodes.length || imgNodes.length)) setEditing(true);
+		var forced = /[?&]edit=1/.test(location.search);
+		if (forced) D.setToolPref('overlay', true);
+		if (D.toolPref('overlay') === false) bar.hidden = true;
+		if (D.registerTool) D.registerTool({
+			id: 'overlay', minRole: OVERLAY_MIN_ROLE, labelKey: 'tools.overlay', hintKey: 'tools.overlayHint',
+			isOn: overlayVisible, setOn: setOverlayVisible
+		});
+		if (forced && (textNodes.length || imgNodes.length)) setEditing(true);
 	});
 })();

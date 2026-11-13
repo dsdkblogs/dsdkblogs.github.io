@@ -867,3 +867,18 @@ body.is-editing [data-edit]:focus { outline-style: solid; background: var(--acce
 body.is-editing [data-edit-img] { outline: 2px dashed var(--sage); outline-offset: 3px; }
 .edit-img-btn { position: absolute; z-index: 5; left: 50%; top: 50%; transform: translate(-50%, -50%); padding: 0.55rem 1rem; border: 0; border-radius: 999px; background: var(--ink); color: var(--bg); font: 700 0.85rem/1 var(--font-body); cursor: pointer; box-shadow: var(--shadow); }
 .edit-img-btn:hover { background: var(--accent-deep); color: var(--accent-ink); }
+
+/* Staff tools menu (publisher / editor / admin): header button + popover. Built by site.js only for those roles. */
+.header-top { position: relative; }
+.tools-wrap { display: inline-flex; }
+.tools-btn[aria-expanded="true"] { background: var(--accent-soft); border-color: var(--accent); }
+.tools-menu { position: absolute; z-index: 170; top: 100%; right: 0; display: grid; gap: 0.25rem; width: min(20rem, 100%); padding: 0.6rem; background: var(--surface); color: var(--ink); border: 2px solid var(--accent); border-radius: var(--r-md); box-shadow: var(--shadow); }
+.tools-menu[hidden] { display: none; }
+.tools-menu__title { margin: 0 0 0.15rem; padding: 0 0.4rem; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+.tools-menu__item { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; width: 100%; min-height: 2.75rem; padding: 0.55rem 0.7rem; border: 1px solid transparent; border-radius: var(--r-sm); background: transparent; color: var(--ink); font: inherit; text-align: left; text-decoration: none; cursor: pointer; }
+.tools-menu__item:hover, .tools-menu__item:focus-visible { background: var(--accent-soft); border-color: var(--accent); color: var(--ink); }
+.tools-menu__item strong { display: block; font-size: 0.95rem; }
+.tools-menu__item small { display: block; margin-top: 0.15rem; font-size: 0.78rem; line-height: 1.3; color: var(--muted); }
+.tools-menu__state { flex: none; min-width: 2.6rem; padding: 0.2rem 0.6rem; border-radius: 999px; border: 1px solid var(--line); font-size: 0.75rem; font-weight: 700; text-align: center; }
+.tools-menu__toggle[aria-checked="true"] .tools-menu__state { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+@media (max-width: 859px) { .tools-menu { width: min(20rem, 100%); } }
