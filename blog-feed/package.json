@@ -1,0 +1,14 @@
+{
+	"name": "blog-feed",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"dev": "wrangler dev",
+		"deploy": "wrangler deploy",
+		"migrate:local": "wrangler d1 migrations apply blog-feed-db --local",
+		"migrate:remote": "wrangler d1 migrations apply blog-feed-db --remote"
+	},
+	"devDependencies": {
+		"wrangler": "^4"
+	}
+}

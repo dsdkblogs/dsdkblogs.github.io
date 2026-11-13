@@ -1,0 +1,2 @@
+ALTER TABLE accounts ADD COLUMN display_name TEXT NOT NULL DEFAULT '';
+ALTER TABLE accounts ADD COLUMN profile_image TEXT NOT NULL DEFAULT '';

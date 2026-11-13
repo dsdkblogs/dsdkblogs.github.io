@@ -1,0 +1,39 @@
+{
+	"name": "blog-feed",
+	"main": "./src/index.js",
+	"account_id": "4ef4499dfdc9a0bcc1abe5c5e400b90e",
+	"compatibility_date": "2026-11-06",
+	"workers_dev": false,
+	"preview_urls": false,
+	"routes": [
+		{
+			"pattern": "blog.ankomstudios.com",
+			"custom_domain": true
+		}
+	],
+	"observability": {
+		"enabled": true
+	},
+	"assets": {
+		"directory": "../public",
+		"binding": "ASSETS",
+		"run_worker_first": [
+			"/api/*"
+		]
+	},
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "blog-feed-db",
+			"database_id": "4c439e34-b730-440d-be6a-add7e8efad71",
+			"migrations_dir": "./migrations"
+		}
+	],
+	"r2_buckets": [
+		{
+			"bucket_name": "dsdk-uploads",
+			"binding": "UPLOADS",
+			"remote": true
+		}
+	]
+}

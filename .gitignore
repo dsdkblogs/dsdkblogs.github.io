@@ -1,15 +1,19 @@
 # Ignore everything at the repo root by default
 /*
 
-# ...except what we actually want in the repo
+# ...except what we want in the repo
 !/.gitignore
 !/.github/
 !/public/
+!/blog-feed/
 
-# Local tooling/secrets that should never be committed, even inside kept folders
+# Never commit these, anywhere
 .wrangler/
 node_modules/
 .env
 .dev.vars
 *.sql
 *.bak
+
+# ...but migrations are schema files and should be versioned
+!/blog-feed/migrations/*.sql

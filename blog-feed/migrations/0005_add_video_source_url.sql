@@ -1,0 +1,1 @@
+ALTER TABLE video_posts ADD COLUMN video_src TEXT NOT NULL DEFAULT '';
