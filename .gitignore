@@ -1,0 +1,15 @@
+# Ignore everything at the repo root by default
+/*
+
+# ...except what we actually want in the repo
+!/.gitignore
+!/.github/
+!/public/
+
+# Local tooling/secrets that should never be committed, even inside kept folders
+.wrangler/
+node_modules/
+.env
+.dev.vars
+*.sql
+*.bak

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Write an article | DSDK Blogs</title>
+		  <link rel="icon" type="image/png" href="assets/images/favicon.png">
+	<meta name="theme-color" content="#fff8f5">
+
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Nunito:wght@400;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap">
+	<link rel="stylesheet" href="assets/css/styles.css">
+
+	<!-- apply saved theme before first paint (default: light) -->
+	<script>try { if (localStorage.getItem('theme') === 'dark') document.documentElement.setAttribute('data-theme', 'dark'); } catch (e) {}</script>
+</head>
+<body class="tool-page">
+	<a class="skip-link" href="#main" data-i18n="skip">Skip to content</a>
+
+	<header class="site-header" id="top">
+		<div class="wrap header-top">
+			<div class="header-side"><p class="header-tagline" data-i18n="tagline">Stories, videos &amp; little joys</p></div>
+
+			<a class="brand" href="index.html" aria-label="DSDK Blogs home">
+				<span class="brand__mark">DSDK</span>
+				<span class="brand__script">blogs</span>
+			</a>
+
+			<div class="header-tools">
+				<button type="button" class="pill-btn header-utility" data-lang-toggle aria-label="Translate to Spanish">ES</button>
+				<button type="button" class="icon-btn header-utility" data-theme-toggle aria-pressed="false" data-i18n-aria="theme.toggle" aria-label="Switch light / dark theme">
+					<svg class="theme-icon--moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5a8.5 8.5 0 1 0 10.7 10.7z"/></svg>
+					<svg class="theme-icon--sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg>
+				</button>
+				<button type="button" id="menu-toggle" class="icon-btn menu-btn" aria-expanded="false" aria-controls="site-nav" data-i18n-aria="menu" aria-label="Menu">
+					<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+				</button>
+			</div>
+		</div>
+
+		<nav class="site-nav" id="site-nav" aria-label="Main">
+			<div class="wrap">
+				<ul>
+					<li><a href="index.html" data-i18n="nav.home">Home</a></li>
+					<li><a href="index.html#latest" data-i18n="nav.latest">Latest</a></li>
+					<li><a href="index.html#topics" data-i18n="nav.topics">Topics</a></li>
+					<li><a href="index.html#about" data-i18n="nav.about">About us</a></li>
+					<li><a href="index.html#conversation" data-i18n="nav.join">Join in</a></li>
+					<li><a href="recommendations.html" data-i18n="nav.recs">Recommendations</a></li>
+					<li><a href="donate.html" data-i18n="nav.donate">Donate</a></li>
+					<li><a href="contact.html" data-i18n="nav.contact">Contact</a></li>
+					<li><a href="manage.html" aria-current="page" data-i18n="nav.account">Account</a></li>
+				</ul>
+				<div class="nav-utility">
+					<button type="button" class="pill-btn" data-lang-toggle aria-label="Translate to Spanish">ES</button>
+					<button type="button" class="icon-btn" data-theme-toggle aria-pressed="false" data-i18n-aria="theme.toggle" aria-label="Switch light / dark theme">
+						<svg class="theme-icon--moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5a8.5 8.5 0 1 0 10.7 10.7z"/></svg>
+					<svg class="theme-icon--sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg>
+					</button>
+				</div>
+			</div>
+		</nav>
+	</header>
+
+	<main id="main" class="write-page">
+		<section class="section">
+			<div class="wrap write-wrap">
+				<div class="publish-head">
+					<h1 id="write-heading">Write an article</h1>
+					<a class="link-arrow" href="manage.html">Manage profile and posts</a>
+				</div>
+				<p id="write-auth-status" class="manage-status" role="status" aria-live="polite">Checking account…</p>
+				<section id="write-gate" class="publish-gate" hidden>
+					<p id="write-gate-message"></p>
+					<a class="btn btn--ghost" href="manage.html">Go to account</a>
+				</section>
+
+				<div id="write-app" hidden>
+					<p id="write-banner" class="lab-banner" role="note" hidden></p>
+					<form id="article-form" class="write-form" novalidate>
+						<div class="write-meta">
+							<div class="write-field write-field--wide"><label for="a-title">Title</label><input id="a-title" maxlength="160" autocomplete="off"></div>
+							<div class="write-field"><label for="a-id">Link slug</label><input id="a-id" maxlength="64" autocomplete="off" spellcheck="false"></div>
+							<div class="write-field"><label for="a-category">Category</label><input id="a-category" maxlength="50" value="Articles"></div>
+							<div class="write-field write-field--wide"><label for="a-desc">Summary (shown on the post card)</label><textarea id="a-desc" maxlength="1000" rows="2"></textarea></div>
+							<div class="write-field"><label for="a-tags">Tags (comma separated)</label><input id="a-tags" placeholder="journal, behind the scenes"></div>
+							<div class="write-field">
+								<label for="a-image">Cover image (HTTPS URL or upload)</label>
+								<div class="write-inline"><input id="a-image" placeholder="https://…"><button type="button" class="btn btn--ghost btn--small" id="a-image-upload">Upload</button></div>
+								<input id="a-image-file" type="file" accept="image/jpeg,image/png,image/webp,image/gif" hidden>
+							</div>
+							<div class="write-field write-field--wide"><label for="a-image-alt">Cover image description</label><input id="a-image-alt" maxlength="200"></div>
+						</div>
+
+						<div class="write-tabs" role="tablist" aria-label="Editor views">
+							<button type="button" role="tab" id="tab-write" aria-selected="true" aria-controls="rte" data-view="write">Write</button>
+							<button type="button" role="tab" id="tab-html" aria-selected="false" aria-controls="src" data-view="html" tabindex="-1">HTML</button>
+							<button type="button" role="tab" id="tab-css" aria-selected="false" aria-controls="css" data-view="css" tabindex="-1">Page CSS</button>
+							<button type="button" role="tab" id="tab-preview" aria-selected="false" aria-controls="preview" data-view="preview" tabindex="-1">Preview</button>
+						</div>
+
+						<div class="rte-toolbar" id="rte-toolbar" role="toolbar" aria-label="Formatting">
+							<select id="rte-block" aria-label="Paragraph style"><option value="p">Paragraph</option><option value="h2">Heading</option><option value="h3">Subheading</option><option value="blockquote">Quote</option></select>
+							<button type="button" class="rte-btn" data-cmd="bold" aria-label="Bold" title="Bold"><b>B</b></button><button type="button" class="rte-btn" data-cmd="italic" aria-label="Italic" title="Italic"><i>I</i></button><button type="button" class="rte-btn" data-cmd="underline" aria-label="Underline" title="Underline"><u>U</u></button>
+							<span class="rte-sep" aria-hidden="true"></span>
+							<button type="button" class="rte-btn" data-cmd="ul" aria-label="Bulleted list" title="Bulleted list">• List</button><button type="button" class="rte-btn" data-cmd="ol" aria-label="Numbered list" title="Numbered list">1. List</button>
+							<span class="rte-sep" aria-hidden="true"></span>
+							<button type="button" class="rte-btn" data-cmd="link" aria-label="Add link" title="Add link">Link</button><button type="button" class="rte-btn" data-cmd="unlink" aria-label="Remove link" title="Remove link">Unlink</button>
+							<span class="rte-sep" aria-hidden="true"></span>
+							<button type="button" class="rte-btn" data-cmd="image" aria-label="Insert image" title="Insert image">Image</button><button type="button" class="rte-btn" data-cmd="video" aria-label="Insert video or embed" title="Insert video or embed">Video</button><button type="button" class="rte-btn" data-cmd="callout" aria-label="Callout box" title="Callout box">Callout</button><button type="button" class="rte-btn" data-cmd="hr" aria-label="Divider line" title="Divider line">—</button>
+							<span class="rte-sep" aria-hidden="true"></span>
+							<button type="button" class="rte-btn" data-cmd="left" aria-label="Align left" title="Align left">⟸</button><button type="button" class="rte-btn" data-cmd="center" aria-label="Center" title="Center">↔</button><button type="button" class="rte-btn" data-cmd="clear" aria-label="Clear formatting" title="Clear formatting">Clear</button>
+						</div>
+
+						<div id="rte" class="rte article-body" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Article body" data-placeholder="Start writing your page here…"></div>
+						<div class="code code--tall" id="src-wrap" hidden><pre class="code__nums" aria-hidden="true"></pre><textarea id="src" class="code__area" spellcheck="false" wrap="off" aria-label="Article HTML"></textarea></div>
+						<div class="code code--tall" id="css-wrap" hidden><pre class="code__nums" aria-hidden="true"></pre><textarea id="css" class="code__area" spellcheck="false" wrap="off" aria-label="Article CSS" placeholder="/* Styles apply only inside this article. Example: */&#10;h2 { color: #b5476a; }&#10;.callout { border-left: 6px solid #b5476a; }"></textarea></div>
+						<div id="preview" class="article-body article-preview" hidden></div>
+
+						<details class="lab-console" id="write-console" hidden>
+							<summary>Cleanup notes <span id="write-console-count"></span></summary>
+							<ul id="write-report" class="lab-report"></ul>
+						</details>
+
+						<div id="write-status" class="publish-status" role="status" aria-live="polite" hidden>
+							<span id="write-status-mark" class="publish-status-mark" aria-hidden="true"></span>
+							<p id="write-status-message"></p>
+							<a id="write-result-link" class="link-arrow" hidden></a>
+						</div>
+						<div class="lab-actions">
+							<button type="button" class="btn btn--ghost" id="write-save-draft">Save draft in this browser</button>
+							<button type="submit" class="btn" id="write-publish"><span id="write-publish-label">Publish article</span><span class="publish-spinner" id="write-spinner" aria-hidden="true" hidden></span></button>
+							<button type="button" class="link-btn" id="write-discard">Discard draft</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</section>
+
+		<dialog id="dlg-image" class="dlg" aria-labelledby="dlg-image-title">
+			<form method="dialog" class="dlg__form" id="dlg-image-form">
+				<h2 id="dlg-image-title">Insert an image</h2>
+				<label for="di-url">Image URL (HTTPS)</label><input id="di-url" type="url" placeholder="https://…">
+				<label for="di-file">…or upload one</label><input id="di-file" type="file" accept="image/jpeg,image/png,image/webp,image/gif">
+				<label for="di-alt">Description (for screen readers)</label><input id="di-alt" maxlength="200">
+				<label for="di-caption">Caption (optional)</label><input id="di-caption" maxlength="200">
+				<label for="di-size">Size</label>
+				<select id="di-size"><option value="full">Full width</option><option value="medium">Medium</option><option value="small">Small, centered</option></select>
+				<p id="di-status" class="auth-status is-error" role="alert" hidden></p>
+				<div class="dlg__actions"><button type="button" class="link-btn" data-close>Cancel</button><button type="submit" class="btn" id="di-ok">Insert</button></div>
+			</form>
+		</dialog>
+		<dialog id="dlg-video" class="dlg" aria-labelledby="dlg-video-title">
+			<form method="dialog" class="dlg__form" id="dlg-video-form">
+				<h2 id="dlg-video-title">Insert a video</h2>
+				<label for="dv-url">YouTube link, or the HTTPS address of a video file (.mp4, .webm …)</label>
+				<input id="dv-url" placeholder="https://www.youtube.com/watch?v=…  or  https://…/clip.mp4">
+				<p id="dv-status" class="auth-status is-error" role="alert" hidden></p>
+				<div class="dlg__actions"><button type="button" class="link-btn" data-close>Cancel</button><button type="submit" class="btn">Insert</button></div>
+			</form>
+		</dialog>
+	</main>
+
+	<footer class="site-footer">
+		<div class="wrap">
+			<p class="footer-script" data-edit="site.footer.script" data-i18n="footer.script">Thanks for stopping by — stay curious &amp; make something lovely.</p>
+			<!-- Social links: add profiles to "socials" in assets/js/config.js when they exist. Nothing shows until then. -->
+			<nav class="social-links" data-socials aria-label="Social" data-i18n-aria="social.label"></nav>
+			<nav aria-label="Footer">
+				<ul class="footer-nav">
+					<li><a href="index.html#latest" data-i18n="nav.latest">Latest</a></li>
+					<li><a href="index.html#topics" data-i18n="nav.topics">Topics</a></li>
+					<li><a href="index.html#about" data-i18n="nav.about">About us</a></li>
+					<li><a href="recommendations.html" data-i18n="nav.recs">Recommendations</a></li>
+					<li><a href="donate.html" data-i18n="nav.donate">Donate</a></li>
+					<li><a href="contact.html" data-i18n="nav.contact">Contact</a></li>
+					<li><a href="manage.html" data-i18n="nav.account">Account</a></li>
+				</ul>
+			</nav>
+			<div class="footer-bar">
+				<p data-i18n="footer.copy" data-year>© 2026 DSDK Blogs</p>
+				<a href="#top" data-i18n="footer.top">Back to top</a>
+			</div>
+		</div>
+	</footer>
+
+	<script src="assets/js/config.js"></script>
+	<script src="assets/js/site.js"></script>
+	<script src="assets/js/sanitize.js"></script>
+	<script src="assets/js/video-player.js"></script>
+	<script src="assets/js/write.js"></script>
+</body>
+</html>
